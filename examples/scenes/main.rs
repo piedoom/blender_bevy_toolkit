@@ -1,6 +1,6 @@
 //! This example loads the various test scenes
 use bevy::prelude::*;
-use bevy_rapier3d::physics::RapierPhysicsPlugin;
+use bevy_rapier3d::physics::{NoUserData, RapierPhysicsPlugin};
 use blender_bevy_toolkit::BlendLoadPlugin;
 
 fn spawn_scene(
@@ -32,7 +32,7 @@ fn main() {
 
     App::build()
         .add_plugins(DefaultPlugins)
-        .add_plugin(RapierPhysicsPlugin)
+        .add_plugin(RapierPhysicsPlugin::<NoUserData>::default())
         .add_plugin(BlendLoadPlugin::default())
         .add_startup_system(spawn_scene.system())
         .run();
