@@ -103,7 +103,7 @@ pub fn body_description_to_builder(
     for (desc, entity, transform) in body_desc_query.iter() {
         commands.entity(entity).remove::<RigidBodyDescription>();
 
-        let isometry = transform.get_isometry();
+        let isometry = Isometry3::from((transform.translation, transform.rotation));
 
         let bundle = RigidBodyBundle {
             body_type: desc.rigid_body_type(),
@@ -209,7 +209,6 @@ pub fn collider_description_to_builder(
         let bundle = ColliderBundle {
             collider_type: desc.collider_type(),
             shape: desc.collider_shape(),
-            position: ColliderPosition(transform.get_isometry()),
             material: ColliderMaterial {
                 friction: desc.friction,
                 restitution: desc.restitution,
@@ -226,15 +225,4 @@ pub fn collider_description_to_builder(
 /// Reads a f32 from a buffer
 fn get_f32(arr: &[u8]) -> f32 {
     f32::from_le_bytes(arr[0..4].try_into().unwrap())
-}
-
-trait TransformExt {
-    fn get_isometry(&self) -> Isometry3<f32>;
-}
-
-// For whatever reason, From<Transform> for Isometry3 does not seem to be implemented
-impl TransformExt for Transform {
-    fn get_isometry(&self) -> Isometry3<f32> {
-        Isometry3::from((self.translation, self.rotation))
-    }
 }
